@@ -1,0 +1,49 @@
+name: phicare
+
+networks:
+  mynet:
+    driver: bridge
+
+services:
+
+  vector_db:
+    image: qdrant/qdrant
+    restart: always
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    networks:
+      - mynet
+    volumes:
+      - "./qdrant_storage:/qdrant/storage"
+  ui:
+    build:
+      context: ./chatbot-ui/
+      dockerfile: Dockerfile 
+    ports:
+      - "8501:8501"
+    networks:
+      - mynet
+    depends_on:
+      - backend
+
+      
+  backend:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    networks:
+      - mynet
+    depends_on:
+      - vector_db
+    secrets:
+      - huggingface_api_token
+
+secrets:
+  huggingface_api_token: 
+    environment: hf_token
+
+volumes:
+    pgdata:

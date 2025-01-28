@@ -1,0 +1,9 @@
+flight_assistant.code-workspace
+local/chatbot-ui/node_modules/
+local/backend/.env
+local/backend/__pycache__/
+local/data/.env
+docker/backend/__pycache__/
+docker/.env
+cloud/
+.env/
