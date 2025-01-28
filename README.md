@@ -107,6 +107,32 @@ If you found this project useful, please consider to [fund it](https://github.co
 
 ## License and usage guidelines
 
+The software is hereby provided under an MIT-like license for what concern its distribution.
+
+Furthermore, the [license](./LICENSE) includes also the terms of usage, that we report here:
+
+```
+1. The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+2. The software is provided for scientific purposes only, including:
+- Research
+- Teaching 
+- Scientific training
+- Testing by developers 
+It should not be used out of this sphere, and the authors of the software 
+are not liable for any out-of-scope use or misuse of the software itself. 
+
+3. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+**By using PhiCare, you accept these terms of usage**: please, do not apply PhiCare to any out-of-scope use case.
 
 
 
