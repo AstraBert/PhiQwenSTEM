@@ -4,14 +4,14 @@ channels:
   - conda-forge
 dependencies:
   - python==3.11.11
+  - langchain 
+  - langchain-core 
+  - websockets
+  - datasets
   - pip
   - pip:
-    - langchain 
-    - langchain_core 
     - langchain_huggingface
     - qdrant_client 
-    - sentence_transformers 
-    - fastembed 
-    - datasets
-    - python-dotenv 
-    - websockets
+    - fastembed
+    - sentence-transformers >= 3.4.1
+    - transformers >= 4.48

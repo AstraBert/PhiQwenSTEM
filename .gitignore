@@ -2,8 +2,7 @@ flight_assistant.code-workspace
 local/chatbot-ui/node_modules/
 local/backend/.env
 local/backend/__pycache__/
-local/data/.env
-docker/backend/__pycache__/
-docker/.env
+docker-workflow/backend/__pycache__/
+docker-workflow/qdrant_storage/
+docker-workflow/.env
 cloud/
-.env/

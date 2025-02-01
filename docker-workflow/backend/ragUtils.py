@@ -5,7 +5,7 @@ from sentence_transformers import SentenceTransformer
 import uuid
 from typing import List
 
-qdrant_client = QdrantClient(host="host.docker.internal", port="6333")
+qdrant_client = QdrantClient(host="host.docker.internal", port=6333)
 reranlking_encoder = SentenceTransformer("nomic-ai/modernbert-embed-base")
 dense_encoder = SentenceTransformer("tomaarsen/static-retrieval-mrl-en-v1")
 sparse_encoder = SparseTextEmbedding(model_name="Qdrant/bm25")

@@ -21,8 +21,8 @@ chat_model = ChatHuggingFace(llm=llm)
 
 # GLOBALS
 
-semantic_cache = SemanticCache(qdrant_client, text_encoder=reranlking_encoder, collection_name="semantic_cache")
-searcher = NeuralSearcher("medical_cot_qa", qdrant_client, dense_encoder, sparse_encoder)
+semantic_cache = SemanticCache(qdrant_client, text_encoder=reranlking_encoder, collection_name="semantic_cache_med")
+searcher = NeuralSearcher("med_cot_qa", qdrant_client, dense_encoder, sparse_encoder)
 reranker = Reranker(reranlking_encoder)
 
 def reply(prompt: str):

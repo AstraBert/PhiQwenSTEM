@@ -4,7 +4,7 @@ from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from ragUtils import SemanticCache, NeuralSearcher, qdrant_client, dense_encoder, sparse_encoder, reranlking_encoder, Reranker
 
-h = open("/run/secrets/hf_token")
+h = open("/run/secrets/huggingface_api_token")
 content2 = h.read()
 h.close()
 HF_TOKEN = content2.replace("\n","")
@@ -22,8 +22,8 @@ chat_model = ChatHuggingFace(llm=llm)
 
 # GLOBALS
 
-semantic_cache = SemanticCache(qdrant_client, text_encoder=reranlking_encoder, collection_name="semantic_cache")
-searcher = NeuralSearcher("medical_cot_qa", qdrant_client, dense_encoder, sparse_encoder)
+semantic_cache = SemanticCache(qdrant_client, text_encoder=reranlking_encoder, collection_name="semantic_cache_med")
+searcher = NeuralSearcher("med_cot_qa", qdrant_client, dense_encoder, sparse_encoder)
 reranker = Reranker(reranlking_encoder)
 
 def reply(prompt: str):

@@ -10,6 +10,7 @@ const __dirname = dirname(__filename)
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: '0.0.0.0',
     port: 8501,
     watch: {
       usePolling: false,

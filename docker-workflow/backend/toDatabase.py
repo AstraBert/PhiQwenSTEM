@@ -38,7 +38,7 @@ if __name__ == "__main__":
     print("Mapped data!")
 
     texts = [d["question"] for d in dataset2dataset]
-    qdrant_client = QdrantClient("http://localhost:6333")
+    qdrant_client = QdrantClient(host="host.docker.internal", port=6333)
 
     dense_encoder = SentenceTransformer("tomaarsen/static-retrieval-mrl-en-v1")
     dense_vectors = dense_encoder.encode(texts)
