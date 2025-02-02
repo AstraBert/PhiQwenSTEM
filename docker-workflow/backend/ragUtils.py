@@ -7,7 +7,7 @@ from typing import List
 
 qdrant_client = QdrantClient(host="host.docker.internal", port=6333)
 reranlking_encoder = SentenceTransformer("nomic-ai/modernbert-embed-base")
-dense_encoder = SentenceTransformer("tomaarsen/static-retrieval-mrl-en-v1")
+dense_encoder = SentenceTransformer("tomaarsen/static-retrieval-mrl-en-v1", truncate_dim=384)
 sparse_encoder = SparseTextEmbedding(model_name="Qdrant/bm25")
 
 ## FUNCTIONS
@@ -89,11 +89,10 @@ class NeuralSearcher:
             query_filter=None,
             limit=limit,
         )
-        responses = [hit.payload["response"] for hit in search_result_dense]
-        responses += [hit.payload["response"] for hit in search_result_sparse]
-        payloads = [hit.payload for hit in search_result_dense]
-        payloads += [hit.payload for hit in search_result_sparse]
-        return payloads, responses
+        responses = [hit.payload["context"] for hit in search_result_dense]
+        responses += [hit.payload["context"] for hit in search_result_sparse]
+        return responses
+    
     
     
     

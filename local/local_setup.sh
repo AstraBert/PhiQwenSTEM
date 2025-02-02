@@ -8,7 +8,7 @@ conda env create -f ./backend/environment.yml
 conda activate phicare-backend
 echo "Created and activated conda environment"
 
-python3 data/createMedCollection.py
+python3 data/createStemCollection.py
 echo "Created the main data collection"
 python3 data/toDatabase.py
 echo "Ingested all the data"

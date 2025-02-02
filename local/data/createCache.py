@@ -7,7 +7,7 @@ load_dotenv()
 qdrant_client = QdrantClient("http://localhost:6333")
 
 
-qdrant_client.recreate_collection(
+qdrant_client.create_collection(
     collection_name="semantic_cache_med",
     vectors_config=models.VectorParams(
         size=768,  # Vector size is defined by used model

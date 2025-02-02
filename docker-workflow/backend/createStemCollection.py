@@ -3,9 +3,9 @@ from qdrant_client import QdrantClient, models
 qdrant_client = QdrantClient(host="host.docker.internal", port=6333)
 
 qdrant_client.create_collection(
-    collection_name="med_cot_qa",
+    collection_name="stem_cot_qa",
     vectors_config={"dense-text": models.VectorParams(
-        size=1024,  # Vector size is defined by used model
+        size=384,  # Vector size is defined by used model
         distance=models.Distance.COSINE,
     )},
     sparse_vectors_config={"sparse-text": models.SparseVectorParams(

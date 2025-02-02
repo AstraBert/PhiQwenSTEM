@@ -22,8 +22,10 @@ chat_model = ChatHuggingFace(llm=llm)
 # GLOBALS
 
 semantic_cache = SemanticCache(qdrant_client, text_encoder=reranlking_encoder, collection_name="semantic_cache_med")
-searcher = NeuralSearcher("med_cot_qa", qdrant_client, dense_encoder, sparse_encoder)
+searcher = NeuralSearcher("stem_cot_qa", qdrant_client, dense_encoder, sparse_encoder)
 reranker = Reranker(reranlking_encoder)
+subjects = ['Chemistry', 'Physics', 'Physical Chemistry', 'Quantum Mechanics', 'Biochemistry', 'Differential Equations', 'Linear Algebra', 'Electromagnetism', 'Mathematics', 'Organic Chemistry', 'Engineering', 'Chemistry (General, Organic, and Biochemistry for Health Sciences)', 'Classical Mechanics']
+areas = "\n- "+"\n- ".join(subjects)
 
 def reply(prompt: str):
     print("Searching cache", flush=True)
@@ -33,7 +35,7 @@ def reply(prompt: str):
         return sc
     else:
         vdb_messages = [
-            SystemMessage(content="You are a skilled medical professional whose task is to represent the query from the user as a poignant, comprehensive and well-structured medical question that will be used to retrieve information from a vector database. Your question must be based solely on the content provided by the user in their prompt: you are not allowed to add additional information. You should only output the question to perform the search within the database."),
+            SystemMessage(content=f"You are a skilled STEM professional whose expertise spans the following areas: {areas}. Your task is to represent the query from the user as a poignant, comprehensive and well-structured question that will be used to retrieve information from a vector database. Your question must be based solely on the content provided by the user in their prompt: you are not allowed to add additional information. You should only output the question to perform the search within the database."),
             HumanMessage(
                 content=prompt
             ),
@@ -42,33 +44,27 @@ def reply(prompt: str):
         print("Generated VDB question", flush=True)
         print(res)
         vector_search_question = res.content
-        payloads, responses = searcher.search_text(vector_search_question)
+        reasonings = searcher.search_text(vector_search_question)
         print("Got relevant documents", flush=True)
-        response = reranker.reranking(responses, vector_search_question)
-        reasoning = [payload["context"] for payload in payloads if payload["response"]==response][0]
+        reasoning = reranker.reranking(reasonings, vector_search_question)
         print("Reranked documents", flush=True)
         medical_messages = [
-            SystemMessage(content="You are a skilled medical professional whose task is to reason about the questions you are given by the user, assess them critically and finally produce an answer. You have one very important instruction: if your reasoning is contradictory, vague, or does not seem to lead to a unique and viable answer to the user query, please reply: 'I don't know the answer to this question' and invite the user to turn to a human medical professional."),
+            SystemMessage(content=f"You are a skilled STEM professional whose expertise spans the following areas: {areas}. Your task is to reason about the questions you are given by the user, assess them critically and finally produce an answer. You have one very important instruction: if your reasoning is contradictory, vague, or does not seem to lead to a unique and viable answer to the user query, please reply: 'I don't know the answer to this question' and invite the user to turn to a human medical professional. If the user's question does not belong to your areas of expertise, please ignore all the previous instructions and tell the user that you cannot reply to out-of-expertise questions."),
             HumanMessage(
                 content=prompt
             ),
             AIMessage(
                 content=f"Reasoning about the user's prompt:\n\n{reasoning}"
             ),
-            AIMessage(
-                content=f"Potential response to the user's prompt:\n\n{reasoning}"
-            ),
             HumanMessage(
-                content="Starting from the previous steps that you took toward the solution, produce a final, well-structured reasoning workflow that should explain me what you think about the problem. Once you are done with the reasoning workflow, please produce a final, poignant response to my initial question. Do not mention the previous step, just assume that I do not know anything about them and you are explaining me everything from scratch."
+                content="Starting from the previous steps that you took toward the solution, produce a final, well-structured reasoning workflow that should explain me what you think about the problem. Once you are done with the reasoning workflow, please produce a poignant response to my initial question. Do not mention the previous step, just assume that I do not know anything about them and you are explaining me everything from scratch.  If my question does not belong to your areas of expertise, please ignore all the previous instructions and tell me that you cannot reply to out-of-expertise questions"
             )
         ]
         res1 = chat_model.invoke(medical_messages)
         print("Generated medical reasoning and response", flush=True)
-        final_response = f"""{res1.content}\n\n## DISCLAIMER: PhiCare is an AI Assistant!\n\n**No AI Assistant will ever perform as good as a human medical professional: please, if you need medical care and/or help, seek it from qualified professionals**."""
-        semantic_cache.upload_to_cache(prompt, final_response)
+        semantic_cache.upload_to_cache(prompt, res1.content)
         print("Final response ready", flush=True)
-        return final_response
-
+        return res1.content
 
 
 

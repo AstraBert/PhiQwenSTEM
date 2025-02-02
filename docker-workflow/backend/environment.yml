@@ -8,6 +8,7 @@ dependencies:
   - langchain-core 
   - websockets
   - datasets
+  - pandas
   - pip
   - pip:
     - langchain_huggingface

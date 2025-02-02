@@ -1,5 +1,5 @@
-<h1 align="center">PhiCare</h1>
-<h2 align="center">An assistant for your medical cases</h2>
+<h1 align="center">phiSTEM</h1>
+<h2 align="center">A reasoning assistant for your STEM eduction</h2>
 <div align="center">
     <img src="./PhiCare.png" alt="PhiCare Logo">
 </div>
