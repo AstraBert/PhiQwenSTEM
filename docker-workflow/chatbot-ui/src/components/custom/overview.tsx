@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Stethoscope, BotMessageSquare } from 'lucide-react';
+import { BotMessageSquare, FlaskConical } from 'lucide-react';
 
 export const Overview = () => {
   return (
@@ -16,10 +16,10 @@ export const Overview = () => {
         <p className="flex flex-row justify-center gap-4 items-center">
           <BotMessageSquare size={44}/>
           <span>+</span>
-          <Stethoscope size={44}/>
+          <FlaskConical size={44}/>
         </p>
         <p>
-          Welcome to <strong className="text-blue-500">PhiCare</strong>, a ChatBot assistant that <strong className="text-blue-500">might</strong> help you in finding a response for your medical cases.<br />
+          Hello, I am <strong className="text-blue-500">phiSTEM</strong>, a reasoning chatbot assistant for Physics, Chemistry, Math and Biochemistry<br />
           Powered by <strong><a href='https://huggingface.co/' className="text-blue-500 underline">HuggingFace</a></strong> and <strong><a href='https://qdrant.tech/' className="text-blue-500 underline">Qdrant</a></strong>.
         </p>
       </div>
