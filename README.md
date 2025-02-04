@@ -4,23 +4,25 @@
     <img src="./phiSTEM.png" alt="phiSTEM Logo">
 </div>
 
-**phiSTEM** is an assistant aimed at helping you solve complex STEM questions through reasoning. It is based on **Phi-3.5** by Microsoft, provided by [HuggingFace](https://huggingface.co) Inference API, and has a vast knowledge base (more than 15,000 data points) managed via [Qdrant](https://qdrant.tech).
+**phiSTEM** is an assistant aimed at helping you solve complex STEM questions through reasoning. It is based on **Phi-3.5** by Microsoft, provided by [HuggingFace](https://huggingface.co) Inference API, and has a vast knowledge base (more than 15,000 STEM questions) managed via [Qdrant](https://qdrant.tech).
 
 ## Workflow
 
-![PhiCare Workflow](./phiSTEM_workflow.png)
+<div>
+    <img src="phiSTEM_workflow.png" width=700 height=450>
+</div>
 
-## How PhiCare works
+## How phiSTEM works
 
-PhiCare operates through three main components:
+phiSTEM operates through three main components:
 
-- **Front-end**: Utilizes Vite to render a ChatGPT-like web interface.
+- **Front-end**: Utilizes Vite to render a landing page and a ChatGPT-like chat interface.
 - **Back-end**: Employs a Python-based websocket to process messages from the front-end and send responses.
 - **Database**: Uses a vector database built on [Qdrant](https://qdrant.tech) to store data for retrieval-augmented generation and semantic caching.
 
 Once you launch the application, the vector database will ingest more than 15,000 STEM-related questions. Each question is associated with:
 - The question itself
-- o1-generated reasoning about the question
+- `QwQ-32B-preview` reasoning about the question
 
 The questions span the following domains of science:
 
@@ -35,16 +37,16 @@ The questions span the following domains of science:
 - Engineering
 - Classical Mechanics
 
-The data comes from the HuggingFace dataset [EricLu/SCP-116K](https://huggingface.co/datasets/EricLu/SCP-116K), made by more than 116,000 STEM-related questions accompanied by the ground truth answer, [`QwQ-32B-preview`](https://huggingface.co/Qwen/QwQ-32B-Preview) reasoning and solution and `o1` reasoning and solution: we selected, from this dataset, questions (from most represented fields in the dataset) in which reasoning by `QwQ-32B-preview` produced the correct answer. 
+The data comes from the HuggingFace dataset [EricLu/SCP-116K](https://huggingface.co/datasets/EricLu/SCP-116K), made by more than 116,000 STEM-related questions accompanied by the ground truth answer, [`QwQ-32B-preview`](https://huggingface.co/Qwen/QwQ-32B-Preview) reasoning and solution and `o1` reasoning and solution: we selected questions (from the most represented domains in the dataset) in which reasoning by `QwQ-32B-preview` produced the correct answer. 
 
-Dense embeddings are obtained using the static text encoder [`tomaarsen/static-retrieval-mrl-en-v1`](https://huggingface.co/tomaarsen/static-retrieval-mrl-en-v1), while sparse embeddings are generated with [`Qdrant/bm25`](https://huggingface.co/Qdrant/bm25). To speed up retrieval, the medical vector database leverages [binary quantization](https://qdrant.tech/articles/binary-quantization/).
+Dense embeddings are obtained using the static text encoder [`tomaarsen/static-retrieval-mrl-en-v1`](https://huggingface.co/tomaarsen/static-retrieval-mrl-en-v1) (embedding size is truncated to 384), while sparse embeddings are generated with [`Qdrant/bm25`](https://huggingface.co/Qdrant/bm25). To speed up retrieval, the medical vector database leverages [binary quantization](https://qdrant.tech/articles/binary-quantization/).
 
 When a user asks a medical question:
 1. The backend first checks for similar questions in the semantic cache using [`modernbert-embed-base`](https://huggingface.co/nomic-ai/modernbert-embed-base). If a match is found, the corresponding answer is returned.
 2. If no significant match is found, it prompts [`Phi-3.5-mini-instruct`](https://huggingface.co/microsoft/Phi-3.5-mini-instruct) (served on HuggingFace Inference API) to produce a question for searching the vector database.
-3. The optimized question prompts a hybrid search within the medical vector database. The top 5 ranking matches for both sparse and dense vectors are retrieved and re-scored by `modernbert-embed-base`.
+3. The optimized question prompts a hybrid search within the medical vector database. The top 2 ranking matches for both sparse and dense vectors are retrieved and re-scored by `modernbert-embed-base`.
 4. The top-ranking retrieved match (after re-scoring) is retained, and `QwQ-32B-preview`-generating reasoning (from the match payload) is passed on as a "reasoning" context.
-5. `Phi-3.5-mini-instruct` is prompted to produce an answer based on the reasoning, generating its answer.
+5. `Phi-3.5-mini-instruct` is prompted to produce an answer based on the reasoning.
 
 > [!NOTE]
 > `Phi-3.5-mini-instruct` is instructed to assess if the reasoning and the answer provided are valid, relevant to the user's question, and correct. It is also instructed to output an "I don't know" answer when the question is ambiguous and the solution is not completely clear.
@@ -60,7 +62,7 @@ When a user asks a medical question:
 
 ```bash
 git clone https://github.com/AstraBert/phiSTEM.git
-cd phicare/docker-workflow/
+cd phiSTEM/docker-workflow/
 ```
 
 - Add the `hf_token` secret in the [`.env.example`](./docker/.env.example) file and modify the name of the file to `.env`. You can get your HuggingFace token by [registering](https://huggingface.co/join) to HuggingFace and creating a [fine-grained token](https://huggingface.co/settings/tokens) that has access to the Inference API.
@@ -139,7 +141,7 @@ cd backend/
 python3 backend.py
 ```
 
-Head over to http://localhost:8501 and you should see PhiCare up and running in less than one minute!
+Head over to http://localhost:8501 and you should see phiSTEM up and running in less than one minute!
 
 ## Contributions
 
