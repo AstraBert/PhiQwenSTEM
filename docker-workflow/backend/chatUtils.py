@@ -2,22 +2,33 @@
 
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
-from dotenv import load_dotenv
-import os
 from ragUtils import SemanticCache, NeuralSearcher, qdrant_client, dense_encoder, sparse_encoder, reranlking_encoder, Reranker
 
-load_dotenv()
+g = open("/run/secrets/huggingface_api_token")
+content = g.read()
+hf_token = content.replace("\n","")
 
 llm = HuggingFaceEndpoint(
+    repo_id="Qwen/QwQ-32B-Preview",
+    task="text-generation",
+    max_new_tokens=512,
+    do_sample=False,
+    repetition_penalty=1.03,
+    huggingfacehub_api_token=hf_token
+)
+
+llm1 = HuggingFaceEndpoint(
     repo_id="microsoft/Phi-3.5-mini-instruct",
     task="text-generation",
     max_new_tokens=512,
     do_sample=False,
     repetition_penalty=1.03,
-    huggingfacehub_api_token=os.getenv("hf_token")
+    huggingfacehub_api_token=hf_token
 )
 
+
 chat_model = ChatHuggingFace(llm=llm)
+chat_model1 = ChatHuggingFace(llm=llm1)
 
 # GLOBALS
 
@@ -34,13 +45,8 @@ def reply(prompt: str):
     if sc:
         return sc
     else:
-        vdb_messages = [
-            SystemMessage(content=f"You are a skilled STEM professional whose expertise spans the following areas: {areas}. Your task is to represent the query from the user as a poignant, comprehensive and well-structured question that will be used to retrieve information from a vector database. Your question must be based solely on the content provided by the user in their prompt: you are not allowed to add additional information. You should only output the question to perform the search within the database."),
-            HumanMessage(
-                content=prompt
-            ),
-        ]
-        res = chat_model.invoke(vdb_messages)
+        vdb_messages = [SystemMessage(content=f"You are a skilled STEM professional whose expertise spans the following areas: {areas}. Your task is to represent the query from the user as a poignant, comprehensive and well-structured question that will be used to retrieve information from a vector database. Your question must be based solely on the content provided by the user in their prompt: you are not allowed to add additional information. You should only output the question to perform the search within the database."), HumanMessage(content=prompt),]
+        res = chat_model1.invoke(vdb_messages)
         print("Generated VDB question", flush=True)
         print(res)
         vector_search_question = res.content

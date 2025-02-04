@@ -1,20 +1,20 @@
-<h1 align="center">phiSTEM</h1>
+<h1 align="center">PhiQwenSTEM</h1>
 <h2 align="center">A reasoning assistant for your STEM education</h2>
 <div align="center">
-    <img src="./phiSTEM.png" alt="phiSTEM Logo">
+    <img src="./phiQwenSTEM.png" alt="PhiQwenSTEM Logo">
 </div>
 
-**phiSTEM** is an assistant aimed at helping you solve complex STEM questions through reasoning. It is based on **Phi-3.5** by Microsoft, provided by [HuggingFace](https://huggingface.co) Inference API, and has a vast knowledge base (more than 15,000 STEM questions) managed via [Qdrant](https://qdrant.tech).
+**PhiQwenSTEM** is an assistant aimed at helping you solve complex STEM questions through reasoning. It is based on **Phi-3.5** and **QwQ-32B-preview** by Microsoft, provided by [HuggingFace](https://huggingface.co) Inference API, and has a vast knowledge base (more than 15,000 STEM questions) managed via [Qdrant](https://qdrant.tech).
 
 ## Workflow
 
 <div>
-    <img src="phiSTEM_workflow.png" width=700 height=450>
+    <img src="PhiQwenSTEM_workflow.png" width=700 height=600>
 </div>
 
-## How phiSTEM works
+## How PhiQwenSTEM works
 
-phiSTEM operates through three main components:
+PhiQwenSTEM operates through three main components:
 
 - **Front-end**: Utilizes Vite to render a landing page and a ChatGPT-like chat interface.
 - **Back-end**: Employs a Python-based websocket to process messages from the front-end and send responses.
@@ -46,10 +46,10 @@ When a user asks a medical question:
 2. If no significant match is found, it prompts [`Phi-3.5-mini-instruct`](https://huggingface.co/microsoft/Phi-3.5-mini-instruct) (served on HuggingFace Inference API) to produce a question for searching the vector database.
 3. The optimized question prompts a hybrid search within the medical vector database. The top 2 ranking matches for both sparse and dense vectors are retrieved and re-scored by `modernbert-embed-base`.
 4. The top-ranking retrieved match (after re-scoring) is retained, and `QwQ-32B-preview`-generating reasoning (from the match payload) is passed on as a "reasoning" context.
-5. `Phi-3.5-mini-instruct` is prompted to produce an answer based on the reasoning.
+5. `QwQ-32B-preview` is prompted to produce an answer based on the reasoning.
 
 > [!NOTE]
-> `Phi-3.5-mini-instruct` is instructed to assess if the reasoning and the answer provided are valid, relevant to the user's question, and correct. It is also instructed to output an "I don't know" answer when the question is ambiguous and the solution is not completely clear.
+> `QwQ-32B-preview` is instructed to assess if the reasoning and the answer provided are valid, relevant to the user's question, and correct. It is also instructed to output an "I don't know" answer when the question is ambiguous and the solution is not completely clear.
 
 
 ## Installation and usage
@@ -61,8 +61,8 @@ When a user asks a medical question:
 - Clone this repository
 
 ```bash
-git clone https://github.com/AstraBert/phiSTEM.git
-cd phiSTEM/docker-workflow/
+git clone https://github.com/AstraBert/PhiQwenSTEM.git
+cd PhiQwenSTEM/docker-workflow/
 ```
 
 - Add the `hf_token` secret in the [`.env.example`](./docker/.env.example) file and modify the name of the file to `.env`. You can get your HuggingFace token by [registering](https://huggingface.co/join) to HuggingFace and creating a [fine-grained token](https://huggingface.co/settings/tokens) that has access to the Inference API.
@@ -90,8 +90,8 @@ You will see the application running on http://localhost:8501 and you will be ab
 - Clone this repository
 
 ```bash
-git clone https://github.com/AstraBert/phiSTEM.git
-cd phiSTEM/local
+git clone https://github.com/AstraBert/PhiQwenSTEM.git
+cd PhiQwenSTEM/local
 ```
 
 - If you are on macOS/Linux, you can run:
@@ -108,7 +108,7 @@ docker compose up -d
 
 # Create conda environment for the backend
 conda env create -f ./backend/environment.yml
-conda activate phistem-backend
+conda activate backend
 
 # Ingest data
 python3 data/toDatabase.py
@@ -136,12 +136,12 @@ npm run dev
 - And, on a separate terminal window, launch the backend:
 
 ```bash
-conda activate phistem-backend
+conda activate backend
 cd backend/
 python3 backend.py
 ```
 
-Head over to http://localhost:8501 and you should see phiSTEM up and running in less than one minute!
+Head over to http://localhost:8501 and you should see PhiQwenSTEM up and running in less than one minute!
 
 ## Contributions
 

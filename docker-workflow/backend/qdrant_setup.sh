@@ -1,6 +1,6 @@
 eval "$(conda shell.bash hook)"
 cd /app/
-conda activate phistem-backend
+conda activate backend
 echo "Activated conda environment"
 python3 createStemCollection.py
 echo "Created the main data collection"

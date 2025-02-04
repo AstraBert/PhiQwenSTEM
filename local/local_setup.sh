@@ -5,7 +5,7 @@ echo "Launched Qdrant"
 
 eval "$(conda shell.bash hook)"
 conda env create -f ./backend/environment.yml
-conda activate phistem-backend
+conda activate backend
 echo "Created and activated conda environment"
 
 python3 data/createStemCollection.py
