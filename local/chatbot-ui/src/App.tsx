@@ -1,4 +1,5 @@
 import './App.css'
+import 'katex/dist/katex.min.css'
 import { Chat } from './pages/chat/chat'
 import { Landing } from './pages/landing/landing'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'

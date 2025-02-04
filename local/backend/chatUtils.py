@@ -17,7 +17,18 @@ llm = HuggingFaceEndpoint(
     huggingfacehub_api_token=os.getenv("hf_token")
 )
 
+llm1 = HuggingFaceEndpoint(
+    repo_id="microsoft/Phi-3.5-mini-instruct",
+    task="text-generation",
+    max_new_tokens=512,
+    do_sample=False,
+    repetition_penalty=1.03,
+    huggingfacehub_api_token=os.getenv("hf_token")
+)
+
+
 chat_model = ChatHuggingFace(llm=llm)
+chat_model1 = ChatHuggingFace(llm=llm1)
 
 # GLOBALS
 
@@ -68,6 +79,3 @@ def reply(prompt: str):
             return res1.content
         except Exception as e:
             return "Sorry, PhiQwenSTEM is not available at the moment. Please, report the problem in the **Problems** category of [GitHub Discussions](https://github.com/AstraBert/PhiQwenSTEM/discussions/categories/problems)"
-        
-
-
