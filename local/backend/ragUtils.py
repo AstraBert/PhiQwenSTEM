@@ -31,8 +31,8 @@ class Reranker:
     def __init__(self, reranking_encoder: SentenceTransformer):
         self.reranking_encoder = reranking_encoder
     def reranking(self, docs: List[str], query: str):
-        query_vector = self.reranking_encoder.encode(query)
-        docs_vector = self.reranking_encoder.encode(docs)
+        query_vector = self.reranking_encoder.encode(query, prompt="search_query")
+        docs_vector = self.reranking_encoder.encode(docs, prompt="search_document")
         similarities = self.reranking_encoder.similarity(docs_vector, query_vector)
         sims = [float(sim[0]) for sim in similarities]
         text2sims = {docs[i]: sims[i] for i in range(len(sims))}
@@ -79,7 +79,7 @@ class NeuralSearcher:
         self.dense_encoder = dense_encoder
         self.qdrant_client = client
         self.sparse_encoder = sparse_encoder
-    def search_text(self, text: str, limit: int = 5):
+    def search_text(self, text: str, limit: int = 2):
         vector = self.dense_encoder.encode(text).tolist()
         search_result_dense = self.qdrant_client.search(
             collection_name=self.text_collection_name,

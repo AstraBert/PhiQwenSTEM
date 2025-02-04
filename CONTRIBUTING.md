@@ -1,9 +1,6 @@
-# Contributing to PhiCare
+# Contributing to phiSTEM
 
 Do you want to contribute to this project? Make sure to read this guidelines first :)
-
-> [!IMPORTANT]
-> _Make sure that all the proposed contributions respect [the usage guidelines](https://github.com/AstraBert/phicare/tree/main?tab=readme-ov-file#license-and-usage-guidelines)_
 
 ## Issue
 

@@ -1,11 +1,11 @@
-echo "Setting up local PhiCare"
+echo "Setting up local phiSTEM"
 
 docker compose up -d
 echo "Launched Qdrant"
 
 eval "$(conda shell.bash hook)"
 conda env create -f ./backend/environment.yml
-conda activate phicare-backend
+conda activate phistem-backend
 echo "Created and activated conda environment"
 
 python3 data/createStemCollection.py

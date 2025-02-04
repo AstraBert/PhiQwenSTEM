@@ -1,4 +1,4 @@
-name: phicare-backend
+name: phistem-backend
 channels:
   - anaconda
   - conda-forge

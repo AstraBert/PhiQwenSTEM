@@ -19,8 +19,9 @@ export const Overview = () => {
           <FlaskConical size={44}/>
         </p>
         <p>
-          Hello, I am <strong className="text-blue-500">phiSTEM</strong>, a reasoning chatbot assistant for Physics, Chemistry, Math and Biochemistry<br />
-          Powered by <strong><a href='https://huggingface.co/' className="text-blue-500 underline">HuggingFace</a></strong> and <strong><a href='https://qdrant.tech/' className="text-blue-500 underline">Qdrant</a></strong>.
+          Hello, I am <strong className="text-purple-500">phiSTEM</strong>, a reasoning chatbot assistant for Physics, Chemistry, Math and Biochemistry.<br />
+          <strong className="text-purple-500">How may I help you today?</strong><br />
+          Powered by <strong><a href='https://huggingface.co/' className="text-purple-500 underline">HuggingFace</a></strong> and <strong><a href='https://qdrant.tech/' className="text-purple-500 underline">Qdrant</a></strong>.
         </p>
       </div>
     </motion.div>
