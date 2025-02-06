@@ -15,14 +15,14 @@ interface ChatInputProps {
 
 const suggestedActions = [
     {
-        title: 'Best anesthetic agent to use',
-        label: 'to treat acute paronychia',
-        action: 'What is the best anesthetic agent to use for treating acute paronychia according to medical recommendations?',
+        title: 'Angle of bank of a plane flying (horizontally)',
+        label: '200m/s with a radius of curvature of 5km',
+        action: 'A plane flies at a constant speed of 200 m/s in a horizontal path with radius of curvature equal to 5 km. What is its angle of bank?',
     },
     {
-        title: 'Why does the capsule of Gram-',
-        label: 'Not take a stain?',
-        action: 'Why does the capsule of gram-negative organisms not take stain, and what are its primary components?',
+        title: 'How many protons',
+        label: 'In a Na atom?',
+        action: 'How many protons are in an atom of sodium?',
     },
 ];
 
@@ -51,7 +51,7 @@ export const ChatInput = ({ question, setQuestion, onSubmit, isLoading }: ChatIn
                             }}
                             className="text-left border rounded-xl px-4 py-3.5 text-sm flex-1 gap-1 sm:flex-col w-full h-auto justify-start items-start"
                         >
-                            <span className="font-medium">{suggestedAction.title}</span>
+                            <span className="text-purple-500">{suggestedAction.title}</span>
                             <span className="text-muted-foreground">
                             {suggestedAction.label}
                             </span>

@@ -1,42 +1,55 @@
-<h1 align="center">phiSTEM</h1>
-<h2 align="center">A reasoning assistant for your STEM eduction</h2>
+<h1 align="center">PhiQwenSTEM</h1>
+<h2 align="center">A reasoning assistant for your STEM education</h2>
 <div align="center">
-    <img src="./PhiCare.png" alt="PhiCare Logo">
+    <img src="./phiQwenSTEM.png" alt="PhiQwenSTEM Logo">
 </div>
 
-**PhiCare** is an assistant aimed at resolving medical cases. It is based on **Phi-3.5** by Microsoft, provided by [HuggingFace](https://huggingface.co) Inference API, and has a vast knowledge base (almost 25000 data points) managed via [Qdrant](https://qdrant.tech).
+**PhiQwenSTEM** is an assistant aimed at helping you solve complex STEM questions through reasoning. It is based on **Phi-3.5** and **QwQ-32B-preview** by Microsoft, provided by [HuggingFace](https://huggingface.co) Inference API, and has a vast knowledge base (more than 15,000 STEM questions) managed via [Qdrant](https://qdrant.tech).
 
 ## Workflow
 
-![PhiCare Workflow](./PhiCare_workflow.png)
+<div>
+    <img src="PhiQwenSTEM_workflow.png" width=700 height=600>
+</div>
 
-## How PhiCare works
+## How PhiQwenSTEM works
 
-PhiCare operates through three main components:
+PhiQwenSTEM operates through three main components:
 
-- **Front-end**: Utilizes Vite to render a ChatGPT-like web interface.
+- **Front-end**: Utilizes Vite to render a landing page and a ChatGPT-like chat interface.
 - **Back-end**: Employs a Python-based websocket to process messages from the front-end and send responses.
 - **Database**: Uses a vector database built on [Qdrant](https://qdrant.tech) to store data for retrieval-augmented generation and semantic caching.
 
-Once you launch the application, the vector database will ingest approximately 13,000 medical questions. Each question is associated with:
+Once you launch the application, the vector database will ingest more than 15,000 STEM-related questions. Each question is associated with:
 - The question itself
-- o1-generated reasoning about the question
-- o1-generated response
-- The ground truth answer
+- `QwQ-32B-preview` reasoning about the question
 
-The data comes from two HuggingFace datasets: [`medical-o1-reasoning-SFT`](https://huggingface.co/datasets/FreedomIntelligence/medical-o1-reasoning-SFT) and [`medical-o1-verifiable-problem`](https://huggingface.co/datasets/FreedomIntelligence/medical-o1-verifiable-problem). Dense embeddings are obtained using the static text encoder [`tomaarsen/static-retrieval-mrl-en-v1`](https://huggingface.co/tomaarsen/static-retrieval-mrl-en-v1), while sparse embeddings are generated with [`Qdrant/bm25`](https://huggingface.co/Qdrant/bm25). To speed up retrieval, the medical vector database leverages [binary quantization](https://qdrant.tech/articles/binary-quantization/).
+The questions span the following domains of science:
+
+- Chemistry (General, Organic, and Biochemistry)
+- Physics
+- Physical Chemistry
+- Quantum Mechanics
+- Differential Equations
+- Linear Algebra
+- Electromagnetism
+- Mathematics
+- Engineering
+- Classical Mechanics
+
+The data comes from the HuggingFace dataset [EricLu/SCP-116K](https://huggingface.co/datasets/EricLu/SCP-116K), made by more than 116,000 STEM-related questions accompanied by the ground truth answer, [`QwQ-32B-preview`](https://huggingface.co/Qwen/QwQ-32B-Preview) reasoning and solution and `o1` reasoning and solution: we selected questions (from the most represented domains in the dataset) in which reasoning by `QwQ-32B-preview` produced the correct answer. 
+
+Dense embeddings are obtained using the static text encoder [`tomaarsen/static-retrieval-mrl-en-v1`](https://huggingface.co/tomaarsen/static-retrieval-mrl-en-v1) (embedding size is truncated to 384), while sparse embeddings are generated with [`Qdrant/bm25`](https://huggingface.co/Qdrant/bm25). To speed up retrieval, the medical vector database leverages [binary quantization](https://qdrant.tech/articles/binary-quantization/).
 
 When a user asks a medical question:
 1. The backend first checks for similar questions in the semantic cache using [`modernbert-embed-base`](https://huggingface.co/nomic-ai/modernbert-embed-base). If a match is found, the corresponding answer is returned.
-2. If no significant match is found, it prompts [`Phi-3.5-mini-instruct`](https://huggingface.co/microsoft/Phi-3.5-mini-instruct) (served on HuggingFace Inference API) to produce a question for searching the medical vector database.
-3. The optimized question prompts a hybrid search within the medical vector database. The top 5 ranking matches for both sparse and dense vectors are retrieved and re-scored by `modernbert-embed-base`.
-4. The top-ranking retrieved match (after re-scoring) is retained, and o1-generated reasoning, o1-generated response, and the ground truth answer are extracted from its payload.
-5. `Phi-3.5-mini-instruct` is prompted to produce an answer based on the reasoning and o1-generated response, generating a first response.
-6. The final, refined response is generated by `Phi-3.5-mini-instruct` starting from the ground truth answer.
-7. The final response is always accompanied by a disclaimer stating that PhiCare is an AI assistant and not comparable to the care, accuracy, and knowledge of a human medical professional.
+2. If no significant match is found, it prompts [`Phi-3.5-mini-instruct`](https://huggingface.co/microsoft/Phi-3.5-mini-instruct) (served on HuggingFace Inference API) to produce a question for searching the vector database.
+3. The optimized question prompts a hybrid search within the medical vector database. The top 2 ranking matches for both sparse and dense vectors are retrieved and re-scored by `modernbert-embed-base`.
+4. The top-ranking retrieved match (after re-scoring) is retained, and `QwQ-32B-preview`-generating reasoning (from the match payload) is passed on as a "reasoning" context.
+5. `QwQ-32B-preview` is prompted to produce an answer based on the reasoning.
 
 > [!NOTE]
-> `Phi-3.5-mini-instruct` is instructed to assess if the reasoning and the answer provided are valid, relevant to the user's question, and correct. It is also instructed to output an "I don't know" answer when the question is ambiguous and the solution is not completely clear.
+> `QwQ-32B-preview` is instructed to assess if the reasoning and the answer provided are valid, relevant to the user's question, and correct. It is also instructed to output an "I don't know" answer when the question is ambiguous and the solution is not completely clear.
 
 
 ## Installation and usage
@@ -48,8 +61,8 @@ When a user asks a medical question:
 - Clone this repository
 
 ```bash
-git clone https://github.com/AstraBert/phicare.git
-cd phicare/docker-workflow/
+git clone https://github.com/AstraBert/PhiQwenSTEM.git
+cd PhiQwenSTEM/docker-workflow/
 ```
 
 - Add the `hf_token` secret in the [`.env.example`](./docker/.env.example) file and modify the name of the file to `.env`. You can get your HuggingFace token by [registering](https://huggingface.co/join) to HuggingFace and creating a [fine-grained token](https://huggingface.co/settings/tokens) that has access to the Inference API.
@@ -77,8 +90,8 @@ You will see the application running on http://localhost:8501 and you will be ab
 - Clone this repository
 
 ```bash
-git clone https://github.com/AstraBert/PhiCare.git
-cd PhiCare/local
+git clone https://github.com/AstraBert/PhiQwenSTEM.git
+cd PhiQwenSTEM/local
 ```
 
 - If you are on macOS/Linux, you can run:
@@ -95,7 +108,7 @@ docker compose up -d
 
 # Create conda environment for the backend
 conda env create -f ./backend/environment.yml
-conda activate phicare-backend
+conda activate backend
 
 # Ingest data
 python3 data/toDatabase.py
@@ -123,12 +136,12 @@ npm run dev
 - And, on a separate terminal window, launch the backend:
 
 ```bash
-conda activate phicare-backend
+conda activate backend
 cd backend/
 python3 backend.py
 ```
 
-Head over to http://localhost:8501 and you should see PhiCare up and running in less than one minute!
+Head over to http://localhost:8501 and you should see PhiQwenSTEM up and running in less than one minute!
 
 ## Contributions
 
@@ -138,31 +151,6 @@ Contributions are more than welcome! See [contribution guidelines](./CONTRIBUTIN
 
 If you found this project useful, please consider to [fund it](https://github.com/sponsors/AstraBert) and make it grow: let's support open-source together!😊
 
-## License and usage guidelines
+## License and rights of usage
 
-The software is hereby provided under an MIT-like license for what concern its distribution.
-
-Furthermore, the [license](./LICENSE) includes also the terms of usage, that we report here:
-
-```
-1. The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-2. The software is provided for scientific purposes only, including:
-- Research
-- Teaching 
-- Scientific training
-- Testing by developers 
-It should not be used out of this sphere, and the authors of the software 
-are not liable for any out-of-scope use or misuse of the software itself. 
-
-3. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-**By using PhiCare, you accept these terms of usage**: please, do not apply PhiCare to any out-of-scope use case.
+The software is hereby provided under an MIT license and is free to use.

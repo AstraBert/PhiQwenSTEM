@@ -5,7 +5,7 @@ export const BotIcon = () => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width="16"
-      style={{ color: 'blue' }}
+      style={{ color: 'purple' }}
     >
       <path
         fillRule="evenodd"
