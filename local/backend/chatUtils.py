@@ -69,7 +69,7 @@ def reply(prompt: str):
                     content=f"Reasoning about the user's prompt:\n\n{reasoning}"
                 ),
                 HumanMessage(
-                    content="Starting from the previous steps that you took toward the solution, produce a final, well-structured reasoning workflow that should explain me what you think about the problem. Once you are done with the reasoning workflow, please produce a poignant response to my initial question. Do not mention the previous step, just assume that I do not know anything about them and you are explaining me everything from scratch.  If my question does not belong to your areas of expertise, please ignore all the previous instructions and tell me that you cannot reply to out-of-expertise questions"
+                    content=f"Starting from the previous steps that you took toward the solution, produce a final, well-structured reasoning workflow that should explain me what you think about the problem. Once you are done with the reasoning workflow, please produce a poignant response to my initial question. Do not mention the previous step, just assume that I do not know anything about them and you are explaining me everything from scratch. My question should belong to one of these subjects: {areas}\n If my question does not belong to these subjects, please ignore all the previous instructions and tell me that you cannot reply to out-of-expertise questions"
                 )
             ]
             res1 = chat_model.invoke(medical_messages)
