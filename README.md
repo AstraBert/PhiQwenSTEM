@@ -5,8 +5,7 @@
 </div>
 
 > [!IMPORTANT]
-> _There is a Proof Of Concept demo live at: https://pqstem.org_
-> _The demo will be available until 11th March 2025_
+> _The Proof Of Concept live at: https://pqstem.org is **no longer available**_
 
 **PhiQwenSTEM** is an assistant aimed at helping you solve complex STEM questions through reasoning. It is based on **Phi-3.5** and **QwQ-32B-preview** by Microsoft, provided by [HuggingFace](https://huggingface.co) Inference API, and has a vast knowledge base (more than 15,000 STEM questions) managed via [Qdrant](https://qdrant.tech).
 
